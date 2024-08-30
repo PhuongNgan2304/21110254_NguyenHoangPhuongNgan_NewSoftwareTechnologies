@@ -1,42 +1,51 @@
 import mongoose from "mongoose";
+import mongooseSequence from "mongoose-sequence";
 
-const userSchema = new mongoose.Schema ({
-    email:{
+
+// Create a schema with an explicit id field
+const userSchema = new mongoose.Schema({
+    email: {
+        type: String,  
+        required: true
+    },
+    firstName: {
         type: String,
         required: true
     },
-    firstName:{
+    lastName: {
         type: String,
         required: true
     },
-    lastName:{
-        type: String,
-        required: true
-    },
-    address:{
+    address: {
         type: String,
         required: false
     },
-    phoneNumber:{
+    phoneNumber: {
         type: String,
         required: true
     },
-    gender:{
+    gender: {
         type: Boolean,
         required: false
     },
-    image:{
+    image: {
         type: String,
         required: false
     },
-    roleID:{
+    roleID: {
         type: String,
         required: false
     },
-    positionID:{
+    positionID: {
         type: String,
         required: false
     }
-})
+}, {
+    timestamps: true // Optional: Adds createdAt and updatedAt fields
+});
 
-export default mongoose.model("users", userSchema);
+// // Optional: Auto-increment functionality (if needed)
+// const autoIncrement = mongooseSequence(mongoose);
+// userSchema.plugin(autoIncrement, {inc_field: "customid"}): chỉ dùng khi tự tạo id bằng tay
+
+export default mongoose.model("User", userSchema);

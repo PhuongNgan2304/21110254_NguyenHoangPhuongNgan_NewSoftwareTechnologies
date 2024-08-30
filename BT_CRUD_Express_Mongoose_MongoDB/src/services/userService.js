@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../model/userModel.js';
 import bcrypt from 'bcryptjs';
 
@@ -50,5 +51,77 @@ const getAllUser = () => {
     });
 };
 
+//findOne CRUD
+const getUserInfoById = async (id) => {
+    try {
+        // Ensure id is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid ID format');
+        }
+        const user = await User.findById(id).lean();
+        if (user) {
+            return user;
+        } else {
+            throw new Error('User not found');
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+// const getUserInfoById = async(userId) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             // Ensure id is a valid ObjectId
+//         if (!mongoose.Types.ObjectId.isValid(userId)) {
+//             throw new Error('Invalid ID format');
+//         }
+//         const user = await User.findById(userId).lean();
+//         if (user) {
+//             return user;
+//         } else {
+//             throw new Error('User not found');
+//         }
+//         } catch (error) {
+//             reject(error);
+//         }
+//     })
+// }
 
-export default { createNewUser, getAllUser };
+//hàm put CRUD
+const updateUser = async (id, updateData) => {
+    try {
+        // Ensure id is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid ID format');
+        }
+        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true }).lean();
+        if (updatedUser) {
+            return updatedUser;
+        } else {
+            throw new Error('User not found');
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+//hàm xóa user
+const deleteUserById = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.findById(userId);
+            if(user){
+                await user.deleteOne();
+                resolve("User deleted successfully!");
+            }
+            resolve();//là return
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+
+
+
+export default { createNewUser, getAllUser, getUserInfoById, updateUser, deleteUserById };
